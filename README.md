@@ -1,1 +1,2 @@
-# qualite_logicielle
+# Bowling
+Author : Corentin POISSON
