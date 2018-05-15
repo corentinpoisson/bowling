@@ -323,23 +323,47 @@ class TupleTest {
 	}
 
 	@Test
-	public void tuplesWithNineStrikes_And_OneSpare_HaveElevenTuples_And_NotThreeHundred() {
+	public void tuplesWithNineStrikes_And_OneSpare_HaveElevenTuples_And_NotThreeHundred() throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		for (int i = 0; i < 9; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		}
+		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 5));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+
+		int sum;
+		int score;
 
 		// 2. Action
+		sum = tupleService.getTuplesSum(tuples);
+		score = tupleService.getScore(tuples);
 
 		// 3. Asserts
-
+		assertTrue(score > sum);
+		assertNotEquals(300, score);
 	}
 
 	@Test
-	public void tuplesWithTenStrikes_And_OneSpare_HaveEvelenTuples_And_NotThreeHundred() {
+	public void tuplesWithTenStrikes_And_OneSpare_HaveEvelenTuples_And_NotThreeHundred()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		for (int i = 0; i < 11; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		}
+		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 5));
+
+		int sum;
+		int score;
 
 		// 2. Action
+		sum = tupleService.getTuplesSum(tuples);
+		score = tupleService.getScore(tuples);
 
 		// 3. Asserts
-
+		assertTrue(score > sum);
+		assertNotEquals(300, score);
 	}
 
 	@Test
