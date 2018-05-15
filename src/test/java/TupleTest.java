@@ -289,7 +289,7 @@ class TupleTest {
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
 		List<Tuple> tuples = new ArrayList<Tuple>();
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < 12; ++i) {
 			tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
 		}
 
@@ -305,7 +305,6 @@ class TupleTest {
 		assertEquals(300, score);
 	}
 
-	// TODO: Should we check here or check in the TupleService? 
 	@Test
 	public void cannotAddMoreThanTwoBonusToATuple() {
 		// 1. Actors
@@ -322,5 +321,4 @@ class TupleTest {
 		assertNotEquals(40, score);
 		assertEquals(30, score);
 	}
-
 }

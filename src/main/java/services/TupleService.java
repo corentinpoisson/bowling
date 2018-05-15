@@ -10,12 +10,29 @@ public class TupleService {
 
 	public void addTupleToTupleArray(List<Tuple> tuples, Tuple tuple)
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+
 		if (tuples.size() > 9) {
+			Tuple lastTuple = tuples.get(tuples.size() - 1);
+
 			// TODO: Check if the last tuple is a strike or a spare
 			// If it's a strike, we can add up to two more values to the score
-			// Either the next two strikes, or the values of the next Tuple
-			// If it's a spare, just take the first value of the next Tuple
-			
+			if (lastTuple.getFirstValue() == 10) {
+				if (tuple.getAmountOfBonusAdded() < 2) {
+					if (tuple.getFirstValue() == 10) {
+						lastTuple.addScoreBonus(tuple.getFirstValue());
+						tuples.get(tuples.size()-2).addScoreBonus(tuple.getFirstValue());
+					} else {
+						lastTuple.addScoreBonus(tuple.getFirstValue());
+						lastTuple.addScoreBonus(tuple.getSecondValue());
+					}
+					return;
+				}
+			} else if (lastTuple.getSum() == 10) {
+				if (tuple.getAmountOfBonusAdded() < 1) {
+					lastTuple.addScoreBonus(tuple.getFirstValue());
+					return;
+				}
+			}
 			throw new TupleArrayOutOfBoundException("Cannot add more than ten values in tuple array");
 		}
 
@@ -30,11 +47,7 @@ public class TupleService {
 		if (tuples.size() > 0) {
 			Tuple previousTuple = tuples.get(tuples.size() - 1);
 
-			if (previousTuple.getFirstValue() == 10) {
-				previousTuple.addScoreBonus(tuple.getSum());
-			} else if (previousTuple.getSum() == 10) {
-				previousTuple.addScoreBonus(tuple.getFirstValue());
-			}
+			strikeAndSpareBonus(tuple, previousTuple);
 
 			if (tuples.size() > 1) {
 				Tuple secondPreviousTuple = tuples.get(tuples.size() - 2);
@@ -46,6 +59,14 @@ public class TupleService {
 		}
 
 		tuples.add(tuple);
+	}
+
+	private void strikeAndSpareBonus(Tuple tuple, Tuple previousTuple) {
+		if (previousTuple.getFirstValue() == 10) {
+			previousTuple.addScoreBonus(tuple.getSum());
+		} else if (previousTuple.getSum() == 10) {
+			previousTuple.addScoreBonus(tuple.getFirstValue());
+		}
 	}
 
 	public int getTuplesSum(List<Tuple> tuples) {

@@ -26,6 +26,10 @@ public class Tuple {
 		return secondValue;
 	}
 
+	public int getAmountOfBonusAdded() {
+		return amountOfBonusAdded;
+	}
+
 	public Integer getScore() {
 		if (score == null) {
 			return this.getSum();
@@ -34,7 +38,6 @@ public class Tuple {
 	}
 
 	public void addScoreBonus(int scoreBonus) {
-		// TODO: Should we check here or check in the TupleService? 
 		if (amountOfBonusAdded++ < 2) {
 			this.score += scoreBonus;
 		}
