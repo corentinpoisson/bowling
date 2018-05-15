@@ -1,6 +1,8 @@
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,6 +179,14 @@ class TupleTest {
 				} else if (previousTuple.getSum() == 10) {
 					expectedScore += tuple.getFirstValue();
 				}
+
+				if (i > 1) {
+					Tuple secondPreviousTuple = tuples.get(i - 2);
+
+					if (secondPreviousTuple.getFirstValue() == 10 && previousTuple.getFirstValue() == 10) {
+						expectedScore += tuple.getFirstValue();
+					}
+				}
 			}
 		}
 
@@ -252,6 +262,65 @@ class TupleTest {
 				tupleService.addTupleToTupleArray(tuples, new Tuple(0, 0));
 			}
 		}, expectedExceptionMessage);
+	}
+
+	@Test
+	public void tuplesWithSpare_Should_HaveScoreGreaterThanSum()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		for (int i = 0; i < 10; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(5, 5));
+		}
+
+		int sum;
+		int score;
+
+		// 2. Action
+		sum = tupleService.getTuplesSum(tuples);
+		score = tupleService.getScore(tuples);
+
+		// 3. Asserts
+		assertTrue(score > sum);
+	}
+
+	@Test
+	public void tuplesWithTenStrike_Should_HaveAScoreOfThreeHundred()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		for (int i = 0; i < 10; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		}
+
+		int sum;
+		int score;
+
+		// 2. Action
+		sum = tupleService.getTuplesSum(tuples);
+		score = tupleService.getScore(tuples);
+
+		// 3. Asserts
+		assertTrue(score > sum);
+		assertEquals(300, score);
+	}
+
+	// TODO: Should we check here or check in the TupleService? 
+	@Test
+	public void cannotAddMoreThanTwoBonusToATuple() {
+		// 1. Actors
+		Tuple tuple = new Tuple(10, 0);
+		int score;
+
+		// 2. Action
+		tuple.addScoreBonus(10);
+		tuple.addScoreBonus(10);
+		tuple.addScoreBonus(10);
+		score = tuple.getScore();
+
+		// 3. Asserts
+		assertNotEquals(40, score);
+		assertEquals(30, score);
 	}
 
 }

@@ -11,6 +11,11 @@ public class TupleService {
 	public void addTupleToTupleArray(List<Tuple> tuples, Tuple tuple)
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		if (tuples.size() > 9) {
+			// TODO: Check if the last tuple is a strike or a spare
+			// If it's a strike, we can add up to two more values to the score
+			// Either the next two strikes, or the values of the next Tuple
+			// If it's a spare, just take the first value of the next Tuple
+			
 			throw new TupleArrayOutOfBoundException("Cannot add more than ten values in tuple array");
 		}
 
@@ -29,6 +34,14 @@ public class TupleService {
 				previousTuple.addScoreBonus(tuple.getSum());
 			} else if (previousTuple.getSum() == 10) {
 				previousTuple.addScoreBonus(tuple.getFirstValue());
+			}
+
+			if (tuples.size() > 1) {
+				Tuple secondPreviousTuple = tuples.get(tuples.size() - 2);
+
+				if (secondPreviousTuple.getFirstValue() == 10 && previousTuple.getFirstValue() == 10) {
+					secondPreviousTuple.addScoreBonus(tuple.getFirstValue());
+				}
 			}
 		}
 
