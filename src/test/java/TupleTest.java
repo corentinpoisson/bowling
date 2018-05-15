@@ -148,6 +148,45 @@ class TupleTest {
 	}
 
 	@Test
+	public void tuplesArrayWithTupleSumEqualTen_And_TupleFirstValueEqualTen_Should_GiveCorrectBonus()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 4));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(1, 9));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(0, 10));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(0, 10));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(9, 1));
+		tupleService.addTupleToTupleArray(tuples, new Tuple(4, 1));
+
+		int expectedScore = 0;
+		int score;
+
+		// 2. Action
+		for (int i = 0; i < tuples.size(); ++i) {
+			Tuple tuple = tuples.get(i);
+			expectedScore += tuple.getSum();
+
+			if (i > 0) {
+				Tuple previousTuple = tuples.get(i - 1);
+
+				if (previousTuple.getFirstValue() == 10) {
+					expectedScore += tuple.getSum();
+				} else if (previousTuple.getSum() == 10) {
+					expectedScore += tuple.getFirstValue();
+				}
+			}
+		}
+
+		score = tupleService.getScore(tuples);
+
+		// 3. Asserts
+		assertEquals(expectedScore, score);
+	}
+
+	@Test
 	public void tuplesArrayScore_Should_BeEqualSumOfAllTuple_If_NoTupleSumEqualTen()
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
@@ -166,7 +205,7 @@ class TupleTest {
 			expectedScore += tuple.getFirstValue() + tuple.getSecondValue();
 		}
 
-		sum = tupleService.getSum(tuples);
+		sum = tupleService.getTuplesSum(tuples);
 		score = tupleService.getScore(tuples);
 
 		// 3. Asserts
