@@ -343,12 +343,38 @@ class TupleTest {
 	}
 
 	@Test
-	public void tuplesWithElevenStrikes_And_OneSpare_HaveTwelveTuples_And_NotThreeHundred() {
+	public void tuplesWithElevenStrikes_And_OneSpare_HaveTwelveTuples_And_NotThreeHundred()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		for (int i = 0; i < 11; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+		}
+		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 5));
+
+		int sum;
+		int score;
 
 		// 2. Action
+		sum = tupleService.getTuplesSum(tuples);
+		score = tupleService.getScore(tuples);
 
 		// 3. Asserts
+		assertTrue(score > sum);
+		assertNotEquals(300, score);
+	}
 
+	@Test
+	public void tuplesCannotTakeMoreThanTenStrike() {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		String expectedExceptionMessage = "Cannot add more than ten values in tuple array";
+
+		// 3. Asserts
+		assertThrows(TupleArrayOutOfBoundException.class, () -> {
+			for (int i = 0; i < 15; ++i) {
+				tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
+			}
+		}, expectedExceptionMessage);
 	}
 }
