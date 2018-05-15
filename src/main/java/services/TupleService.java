@@ -44,6 +44,16 @@ public class TupleService {
 
 		return sums;
 	}
+	
+	public int getSum(List<Tuple> tuples) {
+		int sumTuples = 0;
+
+		for (Tuple tuple : tuples) {
+			sumTuples += tuple.getSum();
+		}
+
+		return sumTuples;
+	}
 
 	public int getScore(List<Tuple> tuples) {
 		int sumScore = 0;

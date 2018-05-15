@@ -148,6 +148,34 @@ class TupleTest {
 	}
 
 	@Test
+	public void tuplesArrayScore_Should_BeEqualSumOfAllTuple_If_NoTupleSumEqualTen()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+
+		for (int i = 0; i < 1 + Math.random() * 9; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(i / 2, i / 2));
+		}
+
+		int expectedScore = 0;
+		int sum;
+		int score;
+
+		// 2. Action
+		for (Tuple tuple : tuples) {
+			expectedScore += tuple.getFirstValue() + tuple.getSecondValue();
+		}
+
+		sum = tupleService.getSum(tuples);
+		score = tupleService.getScore(tuples);
+
+		// 3. Asserts
+		assertEquals(expectedScore, sum);
+		assertEquals(expectedScore, score);
+		assertEquals(sum, score);
+	}
+
+	@Test
 	public void tuplesArray_Should_BeAbleToContainTenTuples()
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
@@ -160,7 +188,7 @@ class TupleTest {
 	}
 
 	@Test
-	public void tuplesArray_ShouldThrowException_When_AddingWayMoreThanTenValues() {
+	public void tuplesArray_Should_ThrowException_When_AddingWayMoreThanTenTuples() {
 		// 1. Actors
 		List<Tuple> tuples = new ArrayList<Tuple>();
 		String expectedExceptionMessage = "Cannot add more than ten values in tuple array";
@@ -168,6 +196,20 @@ class TupleTest {
 		// 3. Asserts
 		assertThrows(TupleArrayOutOfBoundException.class, () -> {
 			for (int i = 0; i < 20; ++i) {
+				tupleService.addTupleToTupleArray(tuples, new Tuple(0, 0));
+			}
+		}, expectedExceptionMessage);
+	}
+
+	@Test
+	public void tuplesArray_Should_ThrowException_When_AddingElevenTuples() {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		String expectedExceptionMessage = "Cannot add more than ten values in tuple array";
+
+		// 3. Asserts
+		assertThrows(TupleArrayOutOfBoundException.class, () -> {
+			for (int i = 0; i < 11; ++i) {
 				tupleService.addTupleToTupleArray(tuples, new Tuple(0, 0));
 			}
 		}, expectedExceptionMessage);
