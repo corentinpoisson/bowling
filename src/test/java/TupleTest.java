@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import domain.Tuple;
 import exceptions.InvalidTupleValueException;
+import exceptions.TupleArrayOutOfBoundException;
 import services.TupleService;
 
 class TupleTest {
@@ -86,12 +87,12 @@ class TupleTest {
 
 	@Test
 	public void tuplesArrayFirstTupleWithSumEqualTen_Should_ReceiveNextTupleFirstValue()
-			throws InvalidTupleValueException {
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
 		List<Tuple> tuples = new ArrayList<Tuple>();
 		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 5));
 		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 4));
-		
+
 		int expectedScore = 0;
 		int score;
 
@@ -100,8 +101,12 @@ class TupleTest {
 			Tuple tuple = tuples.get(i);
 			expectedScore += tuple.getSum();
 
-			if (tuple.getSum() == 10 && i > 0) {
-				expectedScore += tuples.get(i - 1).getFirstValue();
+			if (i > 0) {
+				Tuple previousTuple = tuples.get(i - 1);
+
+				if (previousTuple.getSum() == 10) {
+					expectedScore += tuple.getFirstValue();
+				}
 			}
 		}
 
@@ -113,12 +118,10 @@ class TupleTest {
 
 	@Test
 	public void tuplesArrayFirstTupleWithFirstValueEqualTen_Should_ReceiveNextTupleTwoValues()
-			throws InvalidTupleValueException {
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
 		List<Tuple> tuples = new ArrayList<Tuple>();
 		tupleService.addTupleToTupleArray(tuples, new Tuple(10, 0));
-		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 4));
-		tupleService.addTupleToTupleArray(tuples, new Tuple(0, 10));
 		tupleService.addTupleToTupleArray(tuples, new Tuple(5, 4));
 
 		int expectedScore = 0;
@@ -129,8 +132,12 @@ class TupleTest {
 			Tuple tuple = tuples.get(i);
 			expectedScore += tuple.getSum();
 
-			if (tuple.getFirstValue() == 10 && i > 0) {
-				expectedScore += tuples.get(i - 1).getSum();
+			if (i > 0) {
+				Tuple previousTuple = tuples.get(i - 1);
+
+				if (previousTuple.getFirstValue() == 10) {
+					expectedScore += tuple.getSum();
+				}
 			}
 		}
 
@@ -138,6 +145,32 @@ class TupleTest {
 
 		// 3. Asserts
 		assertEquals(expectedScore, score);
+	}
+
+	@Test
+	public void tuplesArray_Should_BeAbleToContainTenTuples()
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+
+		// 2. Action
+		for (int i = 0; i < 10; ++i) {
+			tupleService.addTupleToTupleArray(tuples, new Tuple(0, 0));
+		}
+	}
+
+	@Test
+	public void tuplesArray_ShouldThrowException_When_AddingWayMoreThanTenValues() {
+		// 1. Actors
+		List<Tuple> tuples = new ArrayList<Tuple>();
+		String expectedExceptionMessage = "Cannot add more than ten values in tuple array";
+
+		// 3. Asserts
+		assertThrows(TupleArrayOutOfBoundException.class, () -> {
+			for (int i = 0; i < 20; ++i) {
+				tupleService.addTupleToTupleArray(tuples, new Tuple(0, 0));
+			}
+		}, expectedExceptionMessage);
 	}
 
 }

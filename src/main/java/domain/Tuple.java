@@ -25,6 +25,9 @@ public class Tuple {
 	}
 
 	public Integer getScore() {
+		if (score == null) {
+			return this.getSum();
+		}
 		return score;
 	}
 

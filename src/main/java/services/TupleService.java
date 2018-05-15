@@ -4,10 +4,16 @@ import java.util.List;
 
 import domain.Tuple;
 import exceptions.InvalidTupleValueException;
+import exceptions.TupleArrayOutOfBoundException;
 
 public class TupleService {
 
-	public void addTupleToTupleArray(List<Tuple> tuples, Tuple tuple) throws InvalidTupleValueException {
+	public void addTupleToTupleArray(List<Tuple> tuples, Tuple tuple)
+			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
+		if (tuples.size() > 9) {
+			throw new TupleArrayOutOfBoundException("Cannot add more than ten values in tuple array");
+		}
+
 		if (tuple.getFirstValue() < 0 || tuple.getSecondValue() < 0) {
 			throw new InvalidTupleValueException("Tuple cannot take negative value");
 		}
@@ -16,10 +22,8 @@ public class TupleService {
 			throw new InvalidTupleValueException("Tuple sum cannot be above ten");
 		}
 
-		if (tuples.size() < 1) {
-
-		} else {
-			Tuple previousTuple = tuples.get(tuples.size() - 2);
+		if (tuples.size() > 0) {
+			Tuple previousTuple = tuples.get(tuples.size() - 1);
 
 			if (previousTuple.getFirstValue() == 10) {
 				previousTuple.addScoreBonus(tuple.getSum());
@@ -27,6 +31,8 @@ public class TupleService {
 				previousTuple.addScoreBonus(tuple.getFirstValue());
 			}
 		}
+
+		tuples.add(tuple);
 	}
 
 	public int getTuplesSum(List<Tuple> tuples) {
