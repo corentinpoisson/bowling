@@ -285,7 +285,7 @@ class TupleTest {
 	}
 
 	@Test
-	public void tuplesWithTenStrike_Should_HaveAScoreOfThreeHundred()
+	public void tuplesWithTenStrike_Should_HaveTwelveTuples_And_AScoreOfThreeHundred()
 			throws InvalidTupleValueException, TupleArrayOutOfBoundException {
 		// 1. Actors
 		List<Tuple> tuples = new ArrayList<Tuple>();
@@ -320,5 +320,35 @@ class TupleTest {
 		// 3. Asserts
 		assertNotEquals(40, score);
 		assertEquals(30, score);
+	}
+
+	@Test
+	public void tuplesWithNineStrikes_And_OneSpare_HaveElevenTuples_And_NotThreeHundred() {
+		// 1. Actors
+
+		// 2. Action
+
+		// 3. Asserts
+
+	}
+
+	@Test
+	public void tuplesWithTenStrikes_And_OneSpare_HaveEvelenTuples_And_NotThreeHundred() {
+		// 1. Actors
+
+		// 2. Action
+
+		// 3. Asserts
+
+	}
+
+	@Test
+	public void tuplesWithElevenStrikes_And_OneSpare_HaveTwelveTuples_And_NotThreeHundred() {
+		// 1. Actors
+
+		// 2. Action
+
+		// 3. Asserts
+
 	}
 }
